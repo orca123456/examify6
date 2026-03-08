@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../shared/providers/auth_provider.dart';
 
+import '../../shared/providers/classroom_provider.dart';
+
 class MeetPrepScreen extends ConsumerStatefulWidget {
-  const MeetPrepScreen({super.key});
+  final String classroomId;
+  const MeetPrepScreen({super.key, required this.classroomId});
 
   @override
   ConsumerState<MeetPrepScreen> createState() => _MeetPrepScreenState();
@@ -171,9 +175,15 @@ class _MeetPrepScreenState extends ConsumerState<MeetPrepScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Joining the call...')),
-                      );
+                      if (isTeacher) {
+                        ClassroomActions(ref).toggleMeetingState(
+                          int.parse(widget.classroomId),
+                          true,
+                        );
+                      }
+                      context.push(
+                        '/meeting/test-channel?classroomId=${widget.classroomId}',
+                      ); // Temporary hardcoded channel for testing
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
@@ -205,11 +215,22 @@ class _MeetPrepScreenState extends ConsumerState<MeetPrepScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
-                isTeacher
-                    ? 'No one else is here'
-                    : 'Chardane Labiste is in this call',
-                style: Theme.of(context).textTheme.bodySmall,
+              Consumer(
+                builder: (context, ref, child) {
+                  final classroomAsync = ref.watch(
+                    classroomDetailProvider(widget.classroomId),
+                  );
+                  return classroomAsync.when(
+                    data: (classroom) => Text(
+                      isTeacher
+                          ? 'No one else is here'
+                          : '${classroom.teacher?.name ?? 'Teacher'} is in this call',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    loading: () => const CircularProgressIndicator(),
+                    error: (_, __) => const Text('Error loading class details'),
+                  );
+                },
               ),
             ],
           ),

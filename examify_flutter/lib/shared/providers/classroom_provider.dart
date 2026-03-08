@@ -89,6 +89,17 @@ class ClassroomActions {
     await ref.read(apiClientProvider).delete('/classrooms/$id');
     ref.invalidate(classroomsProvider);
   }
+
+  Future<void> toggleMeetingState(int id, bool isActive) async {
+    await ref
+        .read(apiClientProvider)
+        .patch(
+          '/classrooms/$id/meeting',
+          data: {'is_meeting_active': isActive},
+        );
+    ref.invalidate(classroomsProvider);
+    ref.invalidate(classroomDetailProvider(id.toString()));
+  }
 }
 
 class AnnouncementActions {

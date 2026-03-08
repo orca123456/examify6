@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'stream_tab.dart';
 import 'assessments_tab.dart';
 import 'people_tab.dart';
@@ -24,7 +25,7 @@ class ClassroomDetailScreen extends ConsumerWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.videocam_outlined),
-              onPressed: () {},
+              onPressed: () => context.push('/classroom/$id/meet-prep'),
             ),
             IconButton(icon: const Icon(Icons.info_outline), onPressed: () {}),
           ],

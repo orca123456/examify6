@@ -170,4 +170,20 @@ class ClassroomController extends Controller
 
         return response()->json(['message' => 'Classroom deleted'], 200);
     }
+
+    public function toggleMeeting(Request $request, $id)
+    {
+        $classroom = Classroom::where('id', $id)->where('teacher_id', $request->user()->id)->firstOrFail();
+
+        $validated = $request->validate([
+            'is_meeting_active' => 'required|boolean',
+        ]);
+
+        $classroom->update(['is_meeting_active' => $validated['is_meeting_active']]);
+
+        return response()->json([
+            'message' => 'Meeting state updated',
+            'is_meeting_active' => $classroom->is_meeting_active
+        ], 200);
+    }
 }

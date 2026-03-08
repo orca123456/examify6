@@ -14,6 +14,7 @@ class Classroom extends Model
         'name',
         'description',
         'join_code',
+        'is_meeting_active',
     ];
 
     public function teacher()

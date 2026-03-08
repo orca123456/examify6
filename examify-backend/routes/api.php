@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/classrooms', [ClassroomController::class, 'store'])->middleware('teacher');
     Route::get('/classrooms/{id}', [ClassroomController::class, 'show']);
     Route::patch('/classrooms/{id}', [ClassroomController::class, 'update'])->middleware('teacher');
+    Route::patch('/classrooms/{id}/meeting', [ClassroomController::class, 'toggleMeeting'])->middleware('teacher');
     Route::delete('/classrooms/{id}', [ClassroomController::class, 'destroy'])->middleware('teacher');
     Route::post('/join', [ClassroomController::class, 'joinByCode'])->middleware('student');
     Route::get('/classrooms/{id}/students', [ClassroomController::class, 'students']);

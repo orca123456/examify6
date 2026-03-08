@@ -22,6 +22,7 @@ import 'features/assessment/take/take_assessment_screen.dart';
 import 'features/assessment/results/student_result_screen.dart';
 import 'features/assessment/results/proctoring_report_screen.dart';
 import 'features/profile/profile_screen.dart';
+import 'features/classroom/meeting_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,7 +90,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/classroom/:id/meet-prep',
-        builder: (context, state) => const MeetPrepScreen(),
+        builder: (context, state) =>
+            MeetPrepScreen(classroomId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/classroom/:id/meet',
+        builder: (context, state) =>
+            MeetPrepScreen(classroomId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/meeting/:channel',
+        builder: (context, state) {
+          final classroomId = state.uri.queryParameters['classroomId'];
+          return MeetingScreen(
+            channelName: state.pathParameters['channel']!,
+            classroomId: classroomId,
+          );
+        },
       ),
       GoRoute(
         path: '/classroom/:id/create-assessment',
